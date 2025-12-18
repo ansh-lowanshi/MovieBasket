@@ -9,7 +9,7 @@ enum LoginResult { success, wrongCredentials, notRegistered }
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
-      final loggedIn = await LocalStorage.isLoggedIn();
+      final loggedIn = await LocalStorage.shouldAutoLogin();
       if (loggedIn) {
         emit(AuthAuthenticated());
       } else {
@@ -20,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequest>((event, emit) async {
       emit(Authloading());
 
-      final result = await LocalStorage.loginUser(event.email, event.password);
+      final result = await LocalStorage.loginUser(event.email, event.password, event.rememberMe);
       switch (result) {
         case LoginResult.success:
           emit(AuthAuthenticated());
@@ -36,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignupRequest>((event, emit) async {
       emit(Authloading());
-      await LocalStorage.saveUser(event.email, event.password);
+      await LocalStorage.saveUser(event.email, event.password, event.rememberMe);
       emit(AuthAuthenticated());
     });
 

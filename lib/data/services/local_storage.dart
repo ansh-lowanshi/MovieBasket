@@ -1,21 +1,29 @@
 import 'package:moviebasket/bloc/auth/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LocalStorage {
   static const _isLoggedIn = 'isLoggedIn';
   static const _email = 'email';
   static const _password = 'password';
   static const _rememberMe = 'rememberMe';
 
-  static Future<void> saveUser(String email, String password) async {
+  static Future<void> saveUser(
+    String email,
+    String password,
+    bool rememberMe,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_email, email);
     await prefs.setString(_password, password);
+    await prefs.setBool(_rememberMe, rememberMe);
     await prefs.setBool(_isLoggedIn, true);
   }
 
-  static Future<LoginResult> loginUser(String email, String password) async {
+  static Future<LoginResult> loginUser(
+    String email,
+    String password,
+    bool rememberMe,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     final storedEmail = prefs.getString(_email);
     final storedPassword = prefs.getString(_password);
@@ -24,6 +32,7 @@ class LocalStorage {
     }
     if (email == storedEmail && password == storedPassword) {
       await prefs.setBool(_isLoggedIn, true);
+      await prefs.setBool(_rememberMe, rememberMe);
       return LoginResult.success;
     }
     return LoginResult.wrongCredentials;
@@ -37,5 +46,12 @@ class LocalStorage {
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_isLoggedIn, false);
+    await prefs.setBool(_rememberMe, false);
+  }
+
+  static Future<bool> shouldAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return (prefs.getBool(_isLoggedIn) ?? false) &&
+        (prefs.getBool(_rememberMe) ?? false);
   }
 }

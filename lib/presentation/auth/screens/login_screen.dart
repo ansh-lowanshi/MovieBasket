@@ -177,6 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               LoginRequest(
                                 _emailController.text.trim(),
                                 _passwordController.text.trim(),
+                                _rememberMe,
                               ),
                             );
                           }
