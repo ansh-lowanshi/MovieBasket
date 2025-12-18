@@ -69,19 +69,25 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is MovieLoaded) {
-              return GridView.builder(
-                padding: EdgeInsets.all(10),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.65,
-                ),
-                itemCount: state.movies.length,
-                itemBuilder: (context, index) {
-                  final movie = state.movies[index];
-                  return MovieGridItem(movie: movie);
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<MovieBloc>().add(FetchPopularMovies());
                 },
+                child: GridView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.65,
+                  ),
+                  itemCount: state.movies.length,
+                  itemBuilder: (context, index) {
+                    final movie = state.movies[index];
+                    return MovieGridItem(movie: movie);
+                  },
+                ),
               );
             }
 

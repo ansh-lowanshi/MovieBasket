@@ -21,11 +21,12 @@ class AppTheme {
     ),
 
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: AppColors.textPrimary),
-      bodyMedium: TextStyle(color: AppColors.textSecondary),
+      bodyLarge: TextStyle(color: AppColors.primary),
+      bodyMedium: TextStyle(color: AppColors.primary),
       titleLarge: TextStyle(
-        color: AppColors.textPrimary,
+        color: AppColors.primary,
         fontWeight: FontWeight.bold,
+        fontSize: 28
       ),
     ),
   );
@@ -54,6 +55,7 @@ class AppTheme {
       titleLarge: TextStyle(
         color: AppColors.darkTextPrimary,
         fontWeight: FontWeight.bold,
+        fontSize: 28
       ),
     ),
   );
