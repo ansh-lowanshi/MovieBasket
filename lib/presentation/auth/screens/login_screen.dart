@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviebasket/bloc/auth/auth_bloc.dart';
+import 'package:moviebasket/bloc/auth/auth_event.dart';
+import 'package:moviebasket/bloc/auth/auth_state.dart';
 import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
 import 'package:moviebasket/core/theme/app_colors.dart';
+import 'package:moviebasket/bloc/theme/theme_bloc.dart';
+import 'package:moviebasket/bloc/theme/theme_event.dart';
 import 'package:moviebasket/presentation/auth/screens/signup_screen.dart';
+import 'package:moviebasket/presentation/home/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,8 +19,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   bool _showPassword = false;
   bool _rememberMe = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,111 +45,181 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+              context.read<ThemeBloc>().add(ToggleTheme());
+            },
+          ),
+        ],
       ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Sign In',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
-            ),
-
-            SizedBox(height: 20),
-
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                labelStyle: TextStyle(color: AppColors.textSecondary),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-
-            SizedBox(height: 20),
-
-            TextFormField(
-              obscureText: _showPassword,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: TextStyle(color: AppColors.textSecondary),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    onPressed: () => {
-                      setState(() {
-                        _showPassword = !_showPassword;
-                      }),
-                    },
-                    icon: Icon(
-                      _showPassword ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.textPrimary,
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthAuthenticated) {
+            AppNavigation.pushReplacement(context, HomeScreen());
+          }
+          if (state is AuthError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              keyboardType: TextInputType.visiblePassword,
-            ),
 
-            SizedBox(height: 15),
+                    SizedBox(height: 20),
 
-            Row(
-              children: [
-                Checkbox(
-                  value: _rememberMe,
-                  onChanged: (value) {
-                    setState(() {
-                      _rememberMe = !_rememberMe;
-                    });
-                  },
-                ),
-                Text('Remember Me', style: TextStyle(fontSize: 15)),
-              ],
-            ),
+                    TextFormField(
+                      controller: _emailController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email required';
+                        }
+                        final emailRegex = RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        );
 
-            SizedBox(height: 15),
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Enter a valid email';
+                        }
+                      },
 
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(),
-                child: Text(
-                  'LogIn',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Dodn't have an account ? "),
-                GestureDetector(
-                  onTap: () {
-                    AppNavigation.pushReplacement(context, SignupScreen());
-                  },
-                  child: Text(
-                    'SignUp',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                  ),
+
+                    SizedBox(height: 20),
+
+                    TextFormField(
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        }
+                        if (value.length < 8) {
+                          return 'Password must bt 8 charector long';
+                        }
+                      },
+                      obscureText: !_showPassword,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: IconButton(
+                            onPressed: () => {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              }),
+                            },
+                            icon: Icon(
+                              _showPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                    ),
+
+                    SizedBox(height: 15),
+
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              _rememberMe = !_rememberMe;
+                            });
+                          },
+                        ),
+                        Text('Remember Me', style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+
+                    SizedBox(height: 15),
+
+                    SizedBox(
+                      width: 200,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthBloc>().add(
+                              LoginRequest(
+                                _emailController.text.trim(),
+                                _passwordController.text.trim(),
+                              ),
+                            );
+                          }
+                        },
+                        style: ButtonStyle(),
+                        child: Text(
+                          'LogIn',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Dodn't have an account ? "),
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigation.pushReplacement(
+                              context,
+                              SignupScreen(),
+                            );
+                          },
+                          child: Text(
+                            'SignUp',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );

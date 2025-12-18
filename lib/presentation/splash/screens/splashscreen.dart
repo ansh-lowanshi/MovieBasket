@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviebasket/bloc/auth/auth_bloc.dart';
+import 'package:moviebasket/bloc/auth/auth_state.dart';
 import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
 import 'package:moviebasket/core/theme/app_colors.dart';
 import 'package:moviebasket/presentation/auth/screens/login_screen.dart';
 import 'package:moviebasket/presentation/home/screens/home_screen.dart';
-import 'package:moviebasket/presentation/splash/bloc/splash_cubit.dart';
-import 'package:moviebasket/presentation/splash/bloc/splash_state.dart';
+import 'package:moviebasket/bloc/splash/splash_cubit.dart';
+import 'package:moviebasket/bloc/splash/splash_state.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
@@ -19,12 +21,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<SplashCubit, SplashState>(
-        listener: (context, state) {
-          if (state is UnAuthenticated) {
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) async {
+          await Future.delayed(Duration(seconds: 2));
+          if (state is AuthUnauthenticted) {
             AppNavigation.pushReplacement(context, LoginScreen());
           }
-          if (state is Authenticated) {
+          if (state is AuthAuthenticated) {
             AppNavigation.pushReplacement(context, HomeScreen());
           }
         },

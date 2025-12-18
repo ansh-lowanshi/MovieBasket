@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'theme_event.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeMode> {
-  ThemeBloc() : super(ThemeMode.system) {
+  ThemeBloc() : super(ThemeMode.light) {
     on<SetLightTheme>((event, emit) {
       emit(ThemeMode.light);
     });

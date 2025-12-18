@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:moviebasket/bloc/auth/auth_bloc.dart';
+import 'package:moviebasket/bloc/auth/auth_event.dart';
 import 'package:moviebasket/core/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moviebasket/presentation/splash/bloc/splash_cubit.dart';
-import 'core/theme/app_theme.dart';
-import 'core/theme/theme_bloc.dart';
+import 'package:moviebasket/bloc/splash/splash_cubit.dart';
+import 'bloc/theme/theme_bloc.dart';
 import 'package:moviebasket/presentation/splash/screens/splashscreen.dart';
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => ThemeBloc()),
         BlocProvider(create: (_) => SplashCubit()..startedApp()),
+        BlocProvider(create: (_) => AuthBloc()..add(AppStarted())),
       ],
 
       child: BlocBuilder<ThemeBloc, ThemeMode>(
