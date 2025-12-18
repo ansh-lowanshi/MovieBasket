@@ -4,6 +4,8 @@ import 'package:moviebasket/bloc/auth/auth_state.dart';
 import 'package:moviebasket/bloc/splash/splash_state.dart';
 import 'package:moviebasket/data/services/local_storage.dart';
 
+enum LoginResult { success, wrongCredentials, notRegistered }
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
@@ -18,20 +20,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequest>((event, emit) async {
       emit(Authloading());
 
-      final success = await LocalStorage.loginUser(event.email, event.password);
-
-      if(success){
-        emit(AuthAuthenticated());
-      }
-      else {
-        emit(AuthUnauthenticted());
+      final result = await LocalStorage.loginUser(event.email, event.password);
+      switch (result) {
+        case LoginResult.success:
+          emit(AuthAuthenticated());
+          break;
+        case LoginResult.notRegistered:
+          emit(AuthError('User not Registered'));
+          break;
+        case LoginResult.wrongCredentials:
+          emit(AuthError('Wrong Credentials'));
+          break;
       }
     });
 
-    on<SignupRequest>((event,emit) async {
+    on<SignupRequest>((event, emit) async {
       emit(Authloading());
       await LocalStorage.saveUser(event.email, event.password);
       emit(AuthAuthenticated());
+    });
+
+    on<LogoutRequest>((event, emit) async {
+      await LocalStorage.logout();
+      emit(AuthUnauthenticted());
     });
   }
 }

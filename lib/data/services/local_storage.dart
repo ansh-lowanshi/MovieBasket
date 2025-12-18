@@ -1,10 +1,12 @@
-import 'package:flutter/painting.dart';
+import 'package:moviebasket/bloc/auth/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LocalStorage {
   static const _isLoggedIn = 'isLoggedIn';
   static const _email = 'email';
   static const _password = 'password';
+  static const _rememberMe = 'rememberMe';
 
   static Future<void> saveUser(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
@@ -13,16 +15,18 @@ class LocalStorage {
     await prefs.setBool(_isLoggedIn, true);
   }
 
-  static Future<bool> loginUser(String email, String password) async {
+  static Future<LoginResult> loginUser(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    final storedEmail = prefs.getString(email);
-    final storedPassword = prefs.getString(password);
-    if(storedEmail == null || storedPassword == null){}
-    if (email == storedPassword && password == storedPassword) {
-      await prefs.setBool(_isLoggedIn, true);
-      return true;
+    final storedEmail = prefs.getString(_email);
+    final storedPassword = prefs.getString(_password);
+    if (storedEmail == null || storedPassword == null) {
+      return LoginResult.notRegistered;
     }
-    return false;
+    if (email == storedEmail && password == storedPassword) {
+      await prefs.setBool(_isLoggedIn, true);
+      return LoginResult.success;
+    }
+    return LoginResult.wrongCredentials;
   }
 
   static Future<bool> isLoggedIn() async {

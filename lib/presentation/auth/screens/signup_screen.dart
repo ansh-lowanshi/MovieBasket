@@ -155,7 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
                         }
-                        if (value != _passwordController) {
+                        if (value != _passwordController.text.trim()) {
                           return 'Password did not matched';
                         }
                       },
