@@ -9,4 +9,9 @@ class MovieRepository {
     final List<dynamic> result = await apiServices.fetchPopularMovies();
     return result.map((json) => MovieModel.fromJson(json)).toList();
   }
+
+  Future<List<MovieModel>> getSearchedMovie(String query) async {
+    final List<dynamic> result = await apiServices.searchMovies(query);
+    return result.map((e) => MovieModel.fromJson(e)).toList();
+  }
 }

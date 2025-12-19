@@ -6,9 +6,6 @@ class ApiConstants {
 
   static String popularMovies = '$baseUrl/movie/popular?api_key=$apiKey';
 
-  static const String tvMazeBaseUrl = 'https://api.tvmaze.com';
-
-  static String tvMazeShows({int page =0}) => '$tvMazeBaseUrl/shows?page=$page';
-
-  static String searchShow(String query) => '$tvMazeBaseUrl/search/shows?q=$query';
+  static String searchMovies(String query) =>
+      '$baseUrl/search/movie?api_key=$apiKey&query=$query';
 }

@@ -12,6 +12,7 @@ import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
 import 'package:moviebasket/core/theme/app_colors.dart';
 import 'package:moviebasket/data/movie/models/movie.dart';
 import 'package:moviebasket/presentation/auth/screens/login_screen.dart';
+import 'package:moviebasket/presentation/home/screens/search_screen.dart';
 import 'package:moviebasket/presentation/movie/movie_grid_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -97,6 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
             return const SizedBox();
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            AppNavigation.push(context, SearchScreen());
+          },
+          child: Icon(Icons.search),
         ),
       ),
     );
