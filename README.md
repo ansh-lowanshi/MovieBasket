@@ -4,13 +4,14 @@ A flutter based movie search app with TMDB API.
 The app support userlogin with local storage, a remember me feature, theme toggle button on app bar. On home scree popular movies are listed, and functionality of searvhing is 
 
 ## Features
--Login/Signup usign SharedPreferences
--RememberMe functionality
--Splash Screen
--Home Screen with Popular Movies
--Search Movie Screen
--Theme toggling 
--Logout 
+- Login/Signup usign SharedPreferences
+- RememberMe functionality
+- Splash Screen
+- Home Screen with Popular Movies
+- Search Movie Screen
+- Theme toggling
+- Form Validation 
+- Logout 
 
 
 ## Setup Instruction
