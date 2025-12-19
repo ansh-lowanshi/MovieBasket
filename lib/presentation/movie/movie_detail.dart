@@ -2,14 +2,10 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moviebasket/bloc/auth/auth_bloc.dart';
-import 'package:moviebasket/bloc/auth/auth_state.dart';
 import 'package:moviebasket/bloc/theme/theme_bloc.dart';
 import 'package:moviebasket/bloc/theme/theme_event.dart';
-import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
 import 'package:moviebasket/core/theme/app_colors.dart';
 import 'package:moviebasket/data/movie/models/movie.dart';
-import 'package:moviebasket/presentation/auth/screens/login_screen.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final MovieModel movie;

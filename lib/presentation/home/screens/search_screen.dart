@@ -18,9 +18,10 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +55,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 labelStyle: TextStyle(color: AppColors.textSecondary),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _searchController.clear();
+                    });
+                  },
+                  icon: Icon(Icons.close),
                 ),
               ),
               keyboardType: TextInputType.name,

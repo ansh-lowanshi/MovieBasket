@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviebasket/bloc/auth/auth_event.dart';
 import 'package:moviebasket/bloc/auth/auth_state.dart';
-import 'package:moviebasket/bloc/splash/splash_state.dart';
 import 'package:moviebasket/data/services/local_storage.dart';
 
 enum LoginResult { success, wrongCredentials, notRegistered }

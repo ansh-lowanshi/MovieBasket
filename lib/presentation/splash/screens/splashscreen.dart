@@ -6,8 +6,6 @@ import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
 import 'package:moviebasket/core/theme/app_colors.dart';
 import 'package:moviebasket/presentation/auth/screens/login_screen.dart';
 import 'package:moviebasket/presentation/home/screens/home_screen.dart';
-import 'package:moviebasket/bloc/splash/splash_cubit.dart';
-import 'package:moviebasket/bloc/splash/splash_state.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {

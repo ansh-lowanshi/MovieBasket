@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moviebasket/common/helper/navigation/app_navigation.dart';
-import 'package:moviebasket/core/theme/app_colors.dart';
 import 'package:moviebasket/data/movie/models/movie.dart';
 import 'package:moviebasket/presentation/movie/movie_detail.dart';
 
@@ -31,6 +30,7 @@ class MovieGridItem extends StatelessWidget {
                       width: double.infinity,
                     )
                   : Container(
+                      width: double.infinity,
                       color: Colors.grey,
                       child: Icon(Icons.movie, size: 50),
                     ),

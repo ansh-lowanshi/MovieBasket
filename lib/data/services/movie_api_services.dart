@@ -6,6 +6,7 @@ import 'package:moviebasket/data/movie/models/movie.dart';
 
 class MovieApiServices {
   Future<List<dynamic>> fetchPopularMovies() async {
+    
     final response = await http.get(Uri.parse(ApiConstants.popularMovies));
 
     if (response.statusCode == 200) {
