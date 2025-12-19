@@ -15,3 +15,7 @@ The app support userlogin with local storage, a remember me feature, theme toggl
 
 ## Setup Instruction
 Use VPN if accessing from INDIA.
+
+## APK link
+https://drive.google.com/file/d/1Mdi1z_k9X5yjh6rQLmSQmUyDxS_5xfhB/view?usp=sharing
+
