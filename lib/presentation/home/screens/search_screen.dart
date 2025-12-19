@@ -69,6 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
               onChanged: (value) {
                 context.read<MovieBloc>().add(SearchMovie(value));
               },
+              autofocus: true,
             ),
           ),
           Expanded(
@@ -79,6 +80,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
                 if (state is MovieInitial) {
                   return Center(child: Text("Start typing to search"));
+                }
+                if (state is MovieError) {
+                  return Center(child: Text(state.message));
                 }
                 if (state is MovieLoaded) {
                   return GridView.builder(

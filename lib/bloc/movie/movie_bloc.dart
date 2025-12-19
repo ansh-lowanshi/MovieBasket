@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviebasket/bloc/movie/movie_event.dart';
 import 'package:moviebasket/bloc/movie/movie_state.dart';
+import 'package:moviebasket/core/error/exceptions.dart';
 import 'package:moviebasket/data/movie/repo/movie_repo.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
@@ -12,13 +13,15 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       try {
         final movies = await repository.getPopularMovies();
         emit(MovieLoaded(movies));
+      } on NoInternetException {
+        emit(MovieError('No Internet Connection'));
       } catch (e) {
         emit(MovieError(e.toString()));
       }
     });
 
     on<SearchMovie>((event, emit) async {
-      if(event.query.isEmpty){
+      if (event.query.isEmpty) {
         emit(MovieInitial());
         return;
       }
@@ -26,6 +29,8 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       try {
         final movies = await repository.getSearchedMovie(event.query);
         emit(MovieLoaded(movies));
+      } on NoInternetException {
+        emit(MovieError('No Internet Connection'));
       } catch (e) {
         emit(MovieError(e.toString()));
       }
